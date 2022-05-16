@@ -1,0 +1,135 @@
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final PopupController _popupController = PopupController();
+  List<Marker> markers = [];
+
+  //Deletar depois (teste)
+  double mLat = ***********;
+  double mLang = ***********;
+
+  double h1Lat = ***********;
+  double h1Long = ***********;
+
+  double h2Lat = ***********;
+  double h2Long = ***********;
+
+  double flagDist = 1.5; //KM
+
+
+  @override
+  void initState() {
+
+    double myDistToH1 =
+        (sqrt(pow((h1Lat - mLat), 2) + pow((h1Long - mLang), 2))) * 100;
+    print(myDistToH1); // 1.0643359535931303
+
+    double myDistToH2 =
+        (sqrt(pow((h2Lat - mLat), 2) + pow((h2Long - mLang), 2))) * 100;
+    print(myDistToH2); // 1.8027103551973744
+
+
+    //MinhaLocalização
+    markers.add(
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 30,
+        width: 30,
+        point: LatLng(mLat, mLang),
+        builder: (ctx) => Icon(Icons.my_location),
+      ),
+    );
+
+    //Hospital 1
+    if(myDistToH1 <= flagDist){
+      markers.add(
+        Marker(
+          anchorPos: AnchorPos.align(AnchorAlign.center),
+          height: 50,
+          width: 30,
+          point: LatLng(h1Lat, h1Long),
+          builder: (ctx) => Icon(
+            Icons.location_on,
+            color: Color.fromARGB(238, 60, 148, 52),
+          ),
+        ),
+      );
+    }
+    
+
+    //Hospital 2
+    if(myDistToH2 <= flagDist){
+      markers.add(
+        Marker(
+          anchorPos: AnchorPos.align(AnchorAlign.center),
+          height: 50,
+          width: 30,
+          point: LatLng(h2Lat, h2Long),
+          builder: (ctx) => Icon(
+            Icons.location_on,
+            color: Color.fromARGB(238, 60, 148, 52),
+          ),
+        ),
+      );
+    }
+    
+
+    markers.add(
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 50,
+        width: 30,
+        point: LatLng(***********, ***********),
+        builder: (ctx) => Icon(
+          Icons.location_on,
+          color: Color.fromARGB(237, 44, 0, 241),
+        ),
+      ),
+    );
+
+    super.initState();
+  }
+
+  //Abrir e fechar popup
+  final PopupController _popupLayerController = PopupController();
+
+  @override
+  Widget build(BuildContext context) {
+    return FlutterMap(
+      options: MapOptions(
+        zoom: 15.0,
+        minZoom: 13.0,
+        maxZoom: 17.0,
+        center: LatLng(
+            ***********, ***********), //Pegar a geoloc futuramente
+        onTap: (_, __) => _popupLayerController
+            .hideAllPopups(), // Esconder popup ao clicar no mapa
+      ),
+      children: [
+        TileLayerWidget(
+          options: TileLayerOptions(
+            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            subdomains: ['a', 'b', 'c'],
+          ),
+        ),
+        PopupMarkerLayerWidget(
+          options: PopupMarkerLayerOptions(
+            popupController: _popupLayerController,
+            markers: markers,
+            markerRotateAlignment:
+                PopupMarkerLayerOptions.rotationAlignmentFor(AnchorAlign.top),
+            popupBuilder: (BuildContext context, Marker marker) =>
+                MyPopup(marker),
+          ),
+        ),
+      ],
+    );
+  }
+}*/
